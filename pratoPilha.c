@@ -8,21 +8,19 @@ struct prato {
 
 typedef struct prato Prato;
 
-// Ponteiro pilha guarda o primeiro elemento
-Prato *pilha;
-
-void add(char cor){
+Prato* add(Prato *pilha, char cor){
     Prato *p = (Prato*) malloc(sizeof(Prato));
     p->cor = cor;
-    p->prox = pilha; // Apontando para o primeiro elemento
-    pilha = p; // Insere sempre no inicio
+    p->prox = pilha; // o prox do novo prato aponta para o atual da pilha
+    return p; // retorna o novo topo
 }
 
-void rem() {
+Prato* rem(Prato *pilha) {
     if (pilha == NULL) {
         printf("Pilha vazia");
     }else {
-        pilha = pilha->prox;
+        Prato *temp = pilha->prox; // armazena o novo topo
+        return temp; // retorna novo topo
     }
 }
 
@@ -34,12 +32,16 @@ void imprime(Prato *p) {
 }
 
 int main(void) {
-    add('B');
-    add('R');
-    add('G');
+    
+    Prato *pilha = NULL;
+    
+    pilha = add(pilha, 'B');
+    pilha = add(pilha, 'R');
+    pilha = add(pilha, 'G');
 
-    //rem();
+    //imprime(pilha);
+   
+    pilha = rem(pilha);
 
-    Prato *pilhaAux = pilha;
-    imprime(pilhaAux);
+    imprime(pilha);
 }
