@@ -11,37 +11,41 @@ typedef struct prato Prato;
 Prato* add(Prato *pilha, char cor){
     Prato *p = (Prato*) malloc(sizeof(Prato));
     p->cor = cor;
-    p->prox = pilha; // o prox do novo prato aponta para o atual da pilha
-    return p; // retorna o novo topo
+    p->prox = pilha->prox; // novo aponta pro primeiro elemento 
+    pilha->prox = p; //cabeça aponta pro novo
+    return pilha; 
 }
 
 Prato* rem(Prato *pilha) {
-    if (pilha == NULL) {
+    if (pilha->prox == NULL) {
         printf("Pilha vazia");
     }else {
         Prato *temp = pilha->prox; // armazena o novo topo
-        return temp; // retorna novo topo
+        pilha->prox = temp->prox;
     }
+    return pilha;
 }
 
-void imprime(Prato *p) {
-    if (p!=NULL) {
+void imprime(Prato *pilha) {
+    Prato *p = pilha->prox;
+    while (p!=NULL) {
         printf("\nCor do prato: %c", p->cor);
-        imprime(p->prox);
+        p = p->prox;
     }
 }
 
 int main(void) {
     
-    Prato *pilha = NULL;
+    Prato *pilha = (Prato*) malloc(sizeof(Prato)); //cabeca fixa
+    pilha->prox = NULL;
     
-    pilha = add(pilha, 'B');
-    pilha = add(pilha, 'R');
-    pilha = add(pilha, 'G');
+    add(pilha, 'B');
+    add(pilha, 'R');
+    add(pilha, 'G');
 
     //imprime(pilha);
    
-    pilha = rem(pilha);
+    //pilha = rem(pilha);
 
     imprime(pilha);
 }
