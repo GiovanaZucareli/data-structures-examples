@@ -1,0 +1,96 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct nodo {
+    int valor;
+    struct nodo *esq;
+    struct nodo *dir;
+};
+
+typedef struct nodo Nodo;
+
+Nodo* create(int valor) {
+    Nodo *n = malloc(sizeof(Nodo));
+    n->valor = valor;
+    n->esq = NULL;
+    n->dir = NULL;
+    return n;
+}
+
+Nodo* insert(Nodo *root, int valor) {
+    if (root == NULL) {
+        return create(valor); //se estiver vazia, cria raiz
+    }
+
+    if (valor < root->valor) {
+        root->esq = insert(root->esq, valor); //se valor < vai para esquerda
+    } else {
+        root->dir = insert(root->dir, valor); //se valor > vai para esquerda 
+    }
+
+    return root;
+}
+
+void imprimir(Nodo *n) {
+    if (n == NULL) return;
+    imprimir(n->esq);
+    printf("%d ", n->valor);
+    imprimir(n->dir);
+}
+
+// remove e retorna a nova raiz da subarvore
+Nodo* rem(Nodo *root, int valor) {
+    if (root == NULL) return NULL;
+
+    if (valor < root->valor) {
+        root->esq = rem(root->esq, valor);
+    } else if (valor > root->valor) {
+        root->dir = rem(root->dir, valor);
+    } else {
+        // caso 1: sem filhos
+        if (root->esq == NULL && root->dir == NULL) {
+            return NULL;
+        }
+
+        // caso 2: um filho
+        if (root->esq == NULL) {
+            Nodo *aux = root->dir;
+            return aux;
+        } else if (root->dir == NULL) {
+            Nodo *aux = root->esq;
+            return aux;
+        }
+
+        // caso 3: dois filhos 
+        Nodo *p = root->esq;
+        while (p->dir != NULL) p = p->dir;
+        root->valor = p->valor;
+        root->esq = rem(root->esq, p->valor);
+    }
+
+    return root;
+}
+
+
+int main(void) {
+    Nodo *raiz = NULL;
+
+    raiz = insert(raiz, 5);
+    raiz = insert(raiz, 2);
+    raiz = insert(raiz, 1);
+    raiz = insert(raiz, 8);
+    raiz = insert(raiz, 4);
+
+    printf("Árvore (em-ordem) após inserções:\n");
+    imprimir(raiz);
+    printf("\n\nRemovendo 2...\n");
+    raiz = rem(raiz, 2);
+    printf("Árvore (em-ordem):\n");
+    imprimir(raiz);
+    printf("\n\nRemovendo 5 (raiz)...\n");
+    raiz = rem(raiz, 5);
+    printf("Árvore (em-ordem):\n");
+    imprimir(raiz);
+    printf("\n");
+
+}
